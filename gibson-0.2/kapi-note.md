@@ -211,7 +211,7 @@ Now we configure port forwarding through SSH session
 ssh -D 1111 -N -f -l margo 192.168.239.132
 ```
 
-setup proxychains by adding the following line
+setup proxychains by adding the following line in /etc/proxychains.conf
 ```
 socks4  127.0.0.1 1111
 ```
@@ -329,3 +329,8 @@ thanks goes to g0blin and GKNSB for testing, and to g0tM1lk for the offer
 to host the CTF once more.
                                                               --Knightmare
 ```
+
+### For other information
+* [http://www.cl.cam.ac.uk/research/dtg/attarchive/vnc/sshvnc.html](http://www.cl.cam.ac.uk/research/dtg/attarchive/vnc/sshvnc.html)
+* [http://www.naturalborncoder.com/virtualization/2014/10/27/installing-and-running-kvm-on-ubuntu-14-04-part-6/](http://www.naturalborncoder.com/virtualization/2014/10/27/installing-and-running-kvm-on-ubuntu-14-04-part-6/)
+* 
