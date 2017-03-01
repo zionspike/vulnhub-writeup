@@ -48,8 +48,8 @@ Nmap done: 1 IP address (1 host up) scanned in 13.31 seconds
 From an enumeration I got something interesting:
 * Anonymous FTP login allowed
 * HTTP service has 2 interesting pages:
-..* robots.txt
-..* secret
+  * robots.txt
+  * secret
 
 Let check for the services
 ### Anonymous FTP allowed
