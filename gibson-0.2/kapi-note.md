@@ -1,5 +1,5 @@
-# Gibson
-[Link](https://www.vulnhub.com/entry/gibson-02,146/)
+# Gibson 0.2
+[Link to vulnhub](https://www.vulnhub.com/entry/gibson-02,146/)
 
 ## Reconnaissance
 I start with reconnaissance to find the target because it has been set to receive DHCP
@@ -65,7 +65,7 @@ god
 eugene
 ```
 
-With those list, I've successful to authenticate to SSH service by using user "margo" and password "god"
+With those list, I've been successful to authenticate to SSH service by using user "margo" and password "god"
 
 And when I have successfully logged on to the target I enumerate the privelege of the user "margo" and found that margo could run command "/usr/bin/convert" as root.
 ```
@@ -222,7 +222,7 @@ proxychains vncviewer 127.0.0.1
 ```
 
 I found that there are some interesting files in /GARBAGE
-I've copy it using FTP server running on my Kali
+I've copied it using FTP server running on my Kali
 
 I check for exif information in jpg file
 ```
