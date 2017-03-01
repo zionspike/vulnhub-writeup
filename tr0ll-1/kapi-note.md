@@ -92,7 +92,7 @@ I found 2 directories
 ```
 
 ### 0x0856BF/good_luck/
-There is a file named which_one_lol.txt
+There is a file named which_one_lol.txt contains text:
 ```
 maleus
 ps-aux
@@ -107,7 +107,7 @@ overflow
 ```
 
 ### 0x0856BF/this_folder_contains_the_password/
-There is a file named Pass.txt
+There is a file named Pass.txt contains text:
 ```
 Good_job_:)
 ```
