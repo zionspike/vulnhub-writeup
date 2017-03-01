@@ -83,7 +83,7 @@ roflmao: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically l
 root@BOEING:/kapi/vulnhub/tr0ll# ./roflmao 
 Find address 0x0856BF to proceed
 ```
-I was not gonna reverse the binary because when the binary was running there were no memory address **0x0856BF**. So I tried to use 0x0856BF as URL path in HTTP service.
+I was not gonna reverse the binary because when the binary was running there was no memory address **0x0856BF**. So I tried to use 0x0856BF as URL path in HTTP service again.
 
 I found 2 directories
 ```
