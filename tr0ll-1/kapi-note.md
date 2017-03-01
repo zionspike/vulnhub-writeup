@@ -255,7 +255,7 @@ drwxr-xr-x 21 root root 4096 Aug  9  2014 ..
 -rw-r--r--  1 root root   74 Aug 10  2014 .selected_editor
 drwx------  2 root root 4096 Aug 10  2014 .ssh
 -rw-------  1 root root 5538 Aug 13  2014 .viminfo
-root@troll:~# cat proof.txt 
+root@troll:~# cat root/proof.txt 
 Good job, you did it! 
 
 
