@@ -55,6 +55,7 @@ Let check for the services
 ### Anonymous FTP allowed
 There is a file, lol.pcap
 I found some text file name **secret_stuff.txt** was pushed to the FTP server. The file contains text:
+```
 Well, well, well, aren't you just a clever little devil, you almost found the sup3rs3cr3tdirlol :-P
 
 Sucks, you were so close... gotta TRY HARDER!
