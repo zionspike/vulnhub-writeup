@@ -199,7 +199,7 @@ Let check for **var/log/cronlog**
 overflow@troll:/$ cat var/log/cronlog
 */2 * * * * cleaner.py
 ```
-This is cron job which run every 2 minutes. If I could modify cleaner.py and let python do something for me so I would be able to escalate overflow's privilege. But in the first place, I have to find cleaner.py.
+This is cron job run every 2 minutes. If I could modify cleaner.py and let the system do something for me so I would be able to escalate overflow's privilege. But in the first place, I have to find cleaner.py.
 
 ### Find cleaner.py
 ```
@@ -222,9 +222,10 @@ except:
         sys.exit()
 overflow@troll:/$ ls -al /lib/log/cleaner.py
 ```
-Now good news, I found the python file and it's worldwritable.
+Good news, I found the python file and it's worldwritable.
 
 ### Modify cleaner.py
+I modified cleaner.py by adding **sudo su** privilege to account overflow. I expected that when I execute bash command **sudo su** I would got root shell.
 ```
 overflow@troll:/$ cat /lib/log/cleaner.py
 #!/usr/bin/env python
