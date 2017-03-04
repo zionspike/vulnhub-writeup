@@ -72,7 +72,7 @@ Cloning into '192.168.159.133'...
 fatal: repository 'http://192.168.159.133/.git/' not found
 ```
 
-I used **wget -r http://192.168.159.133/.git/** to recursive download all page on /.git
+I used **wget -r http://<i></i>192.168.159.133/.git/** to recursive download all page on /.git
 ```
 root@BOEING# ls -al
 total 56
