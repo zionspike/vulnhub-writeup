@@ -485,7 +485,7 @@ Let check for ASLR if it was enabled. If ASLR was enabled it could protect me to
 root@AIRBUS# python -c'print "\x01\x01/proc/sys/kernel/randomize_va_spaceijpqrs"' | nc 192.168.159.133 6969
 2
 ```
-Not a good news because binary run in the target was protected by [Address space layout randomization](https://en.wikipedia.org/wiki/Address_space_layout_randomization). With another branch of the binary, if I provide 0x02 twice at payload header:
+Not a good news because binary run on the target was protected by [Address space layout randomization](https://en.wikipedia.org/wiki/Address_space_layout_randomization). With another branch of the binary, if I provide 0x02 twice at payload header:
 * <+265> Binary will check if first 2 bytes were 0x02 and 0x02.
 * <+362> Binary prepare fix address **0x600de0** to store input string as buffer.
 * <+410> Indicated the amount of bytes to be copied to buffer.
