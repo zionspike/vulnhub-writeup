@@ -449,7 +449,7 @@ Dump of assembler code for function parse_request:
    0x00000000004008f6 <+432>:   retq   
 End of assembler dump.
 ```
-The binary check if the input started with 0x1 and then read file that input provide the name. But instruction \*1\* it add 0x1 to rax that mean I have to add 0x1 twice and then follow with a file name then the binary will read the file for me.
+The binary check if the input started with 0x1 and then read file that input provided the name. But instruction \*1\* it add 0x1 to rax that mean I have to add 0x1 twice and then follow with a file name then the binary will read the file for me.
 ```
 root@AIRBUS:# cat flag.txt 
 This_is_test_flag_from_Kapi
