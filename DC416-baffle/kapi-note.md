@@ -744,7 +744,7 @@ It had permission to read file of all users so try to read charlie's flag.txt.
 ```
 bob@baffle:~$ nc 127.0.0.1 7979
 Socket fd: 31
-User to query: /./././charlie/flag.txt
+User to query: ///////charlie/flag.txt
 Checking...
 FLAG{i_haz_sriracha_ice_cream}
 ```
@@ -754,10 +754,11 @@ FLAG{i_haz_sriracha_ice_cream}
 FLAG{i_haz_sriracha_ice_cream}
 ```
 
-
 ### 5th FLAG.
 ```
-In process
+To do..
 ```
 
 ### For other information
+* [ASLR-wiki](https://en.wikipedia.org/wiki/Address_space_layout_randomization)
+* [libc address leak](https://blog.techorganic.com/2016/03/18/64-bit-linux-stack-smashing-tutorial-part-3/)
