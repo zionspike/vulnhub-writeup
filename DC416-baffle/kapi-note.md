@@ -761,4 +761,4 @@ To do..
 
 ### For other information
 * [ASLR-wiki](https://en.wikipedia.org/wiki/Address_space_layout_randomization)
-* [libc address leak](https://blog.techorganic.com/2016/03/18/64-bit-linux-stack-smashing-tutorial-part-3/)
+* [64-bit Linux stack smashing tutorial: Part 3](https://blog.techorganic.com/2016/03/18/64-bit-linux-stack-smashing-tutorial-part-3/)
