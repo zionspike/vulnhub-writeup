@@ -739,21 +739,6 @@ Vulnerable by Design
 bob@baffle:~$
 ```
 
-
-It had permission to read file of all users so try to read charlie's flag.txt.
-```
-bob@baffle:~$ nc 127.0.0.1 7979
-Socket fd: 31
-User to query: ///////charlie/flag.txt
-Checking...
-FLAG{i_haz_sriracha_ice_cream}
-```
-
-### 4th FLAG.
-```
-FLAG{i_haz_sriracha_ice_cream}
-```
-
 I now pull the executable binary ctfingerd to my Kali and check if the binary was compiled with any security configuration.
 ```
 root@AIRBUS:# gdb -q ctfingerd
@@ -984,9 +969,34 @@ cat flag.txt
       FLAG{i_tot_i_saw_a_puddy_tat}
 ```
 
-### 5th Flag.
+### 4th Flag.
 ```
 FLAG{i_tot_i_saw_a_puddy_tat}
+```
+
+Traverse to charlie's home and get more flag
+```
+cd /home
+dir
+alice  bob  charlie  vulnhub
+cd charlie
+dir
+flag.txt
+cat flag.txt
+FLAG{i_haz_sriracha_ice_cream}
+```
+### 5th FLAG.
+```
+FLAG{i_haz_sriracha_ice_cream}
+```
+
+### Summary all flags
+```
+1st - FLAG{ARSE_REQUEST} (Letters noticing)
+2nd - FLAG{is_there_an_ivana_tinkle} (buffer overflow)
+3rd - FLAG{tr3each3ry_anD_cUnn1ng} (binary authentication bypass using symbolic link)
+4th - FLAG{i_tot_i_saw_a_puddy_tat} (buffer overflow by bruteforcing canary)
+5th - FLAG{i_haz_sriracha_ice_cream} (adventage from 4th flag)
 ```
 
 ### For other information
