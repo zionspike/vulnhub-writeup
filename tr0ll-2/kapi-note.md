@@ -294,7 +294,7 @@ Connection to 192.168.159.134 closed.
 ```
 
 ## Exploit
-I was able to log on but the connection was closed. Ahhhh I think for a while, Vulnhub release this vulnerable OS 24 October 2014. Around here there is a vulnerability that could able to bypass this (SHELLSHOCK)[http://resources.infosecinstitute.com/practical-shellshock-exploitation-part-2/#gref].
+I was able to log on but the connection was closed. Ahhhh I think for a while, Vulnhub release this vulnerable OS 24 October 2014. Around here there is a vulnerability that could able to bypass this [SHELLSHOCK](http://resources.infosecinstitute.com/practical-shellshock-exploitation-part-2/#gref).
 ```
 root@AIRBUS:# ssh -i noob noob@192.168.159.134 '() { :;}; /bin/bash'
 id
