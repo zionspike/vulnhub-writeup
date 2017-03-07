@@ -969,7 +969,7 @@ cat flag.txt
       FLAG{i_tot_i_saw_a_puddy_tat}
 ```
 
-### 4th Flag.
+### 4th FLAG.
 ```
 FLAG{i_tot_i_saw_a_puddy_tat}
 ```
