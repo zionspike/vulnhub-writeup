@@ -28,6 +28,8 @@ Network Distance: 1 hop
 ## __Enumeration__
 Nmap vulnerability scan
 ```
+nmap -sV -A --script vuln -p- -v 192.168.1.100
+
 Nmap scan report for 192.168.1.100
 Host is up (0.00035s latency).
 Not shown: 65527 filtered ports
